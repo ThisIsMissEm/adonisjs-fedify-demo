@@ -37,3 +37,15 @@ emitter.on('http:request_completed', ({ ctx, duration }) => {
     `request ${ctx.request.method()} ${ctx.request.url()} status=${ctx.response.getStatus()} rt=${responseTime}`
   )
 })
+
+// For Fedify:
+import { configure, getConsoleSink } from '@logtape/logtape'
+
+await configure({
+  sinks: { console: getConsoleSink() },
+  filters: {},
+  loggers: [
+    { category: ['logtape', 'meta'], sinks: ['console'] },
+    { category: 'fedify', sinks: ['console'] },
+  ],
+})

@@ -61,6 +61,7 @@
     "@adonisjs/vite": "^4.0.0",
     "@deno/kv": "^0.10.0",
     "@fedify/fedify": "^1.7.0",
+    "@logtape/logtape": "^1.0.0",
     "@vinejs/vine": "^3.0.1",
     "edge.js": "^6.2.1",
     "fast-glob": "^3.3.3",
