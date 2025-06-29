@@ -105,16 +105,12 @@ export default class FedifyMiddleware {
       }
     }
 
-    const rawBody = req.raw()
-
     return new Request(url, {
       method: req.method(),
       headers,
       duplex: 'half',
       body:
-        req.method() === 'GET' || req.method() === 'HEAD' || rawBody === null
-          ? undefined
-          : Readable.from(rawBody),
+        req.method() === 'GET' || req.method() === 'HEAD' ? undefined : Readable.toWeb(req.request),
     })
   }
 

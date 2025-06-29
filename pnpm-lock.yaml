@@ -35,6 +35,9 @@ importers:
       '@fedify/fedify':
         specifier: ^1.7.0
         version: 1.7.0(web-streams-polyfill@3.3.3)
+      '@logtape/logtape':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@vinejs/vine':
         specifier: ^3.0.1
         version: 3.0.1
