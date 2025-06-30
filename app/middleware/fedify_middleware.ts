@@ -61,6 +61,7 @@ export default class FedifyMiddleware {
         notAcceptable = true
 
         ctx.logger.info('Passing through to not acceptable')
+        ctx.response.header('Vary', 'Accept')
 
         await next()
 
