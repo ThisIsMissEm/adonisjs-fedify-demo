@@ -4,6 +4,7 @@ import { Endpoints, exportJwk, generateCryptoKeyPair, importJwk, Person } from '
 
 federation
   .setActorDispatcher('/actors/{identifier}', async (ctx, identifier) => {
+    ctx.data.logger.debug('Called setActorDispatcher')
     if (identifier !== 'me') return null
 
     const actorKeys = await ctx.getActorKeyPairs(identifier)
@@ -22,7 +23,8 @@ federation
       publicKeys: actorKeys.map((keyPair) => keyPair.cryptographicKey),
     })
   })
-  .setKeyPairsDispatcher(async (_ctx, identifier) => {
+  .setKeyPairsDispatcher(async (ctx, identifier) => {
+    ctx.data.logger.debug('Called setKeyPairsDispatcher')
     if (identifier !== 'me') return [] // Other than "me" is not found.
 
     const actor = await Actor.findBy('identifier', identifier)
@@ -39,7 +41,6 @@ federation
       return [{ privateKey, publicKey }]
     }
 
-    _ctx.data.logger.debug(actor)
     // Load the key pair from the Deno KV database:
     const privateKey = await importJwk(JSON.parse(actor.privateKey), 'private')
     const publicKey = await importJwk(JSON.parse(actor.publicKey), 'public')

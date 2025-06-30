@@ -39,10 +39,38 @@ emitter.on('http:request_completed', ({ ctx, duration }) => {
 })
 
 // For Fedify:
-import { configure, getConsoleSink } from '@logtape/logtape'
+import {
+  configure,
+  defaultConsoleFormatter,
+  getTextFormatter,
+  LogLevel,
+  LogRecord,
+} from '@logtape/logtape'
+const levelMap: Record<LogLevel, Function> = {
+  trace: logger.trace.bind(logger),
+  debug: logger.debug.bind(logger),
+  info: logger.info.bind(logger),
+  warning: logger.warn.bind(logger),
+  error: logger.error.bind(logger),
+  fatal: logger.fatal.bind(logger),
+}
+
+const formatter = getTextFormatter({
+  timestamp: 'disabled',
+  level: () => '',
+})
 
 await configure({
-  sinks: { console: getConsoleSink() },
+  sinks: {
+    console: (record: LogRecord) => {
+      const method = levelMap[record.level]
+
+      if (method === undefined) {
+        throw new TypeError(`Invalid log level: ${record.level}.`)
+      }
+      method(formatter(record).replace(/^\[\]\s+/, ''))
+    },
+  },
   filters: {},
   loggers: [
     { category: ['logtape', 'meta'], sinks: ['console'] },
