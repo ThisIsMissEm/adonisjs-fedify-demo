@@ -23,6 +23,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   PORT: Env.schema.number(),
   HOST: Env.schema.string({ format: 'host' }),
   PUBLIC_URL: Env.schema.string({ format: 'url', tld: false }),
+  DOMAIN: Env.schema.string.optional({ format: 'host' }),
 
   /*
   |----------------------------------------------------------

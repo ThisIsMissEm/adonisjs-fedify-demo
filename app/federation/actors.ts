@@ -1,13 +1,14 @@
+import fedify from '@fedify/adonisjs/services/builder'
 import Actor from '#models/actor'
-import { federation } from '#start/federation'
+
 import { Endpoints, exportJwk, generateCryptoKeyPair, importJwk, Person } from '@fedify/fedify'
 
-federation
+fedify
   .setActorDispatcher('/actors/{identifier}', async (ctx, identifier) => {
-    ctx.data.logger.debug('Called setActorDispatcher')
-    if (identifier !== 'me') return null
+    const actor = await Actor.findBy('identifier', identifier)
+    if (actor === null) return null
 
-    const actorKeys = await ctx.getActorKeyPairs(identifier)
+    const keys = await ctx.getActorKeyPairs(identifier)
     return new Person({
       id: ctx.getActorUri(identifier),
       name: 'Me',
@@ -20,11 +21,11 @@ federation
       }),
       // The public keys of the actor; they are provided by the key pairs
       // dispatcher we define below:
-      publicKeys: actorKeys.map((keyPair) => keyPair.cryptographicKey),
+      publicKeys: keys.map((keyPair) => keyPair.cryptographicKey),
+      assertionMethods: keys.map((keyPair) => keyPair.multikey),
     })
   })
-  .setKeyPairsDispatcher(async (ctx, identifier) => {
-    ctx.data.logger.debug('Called setKeyPairsDispatcher')
+  .setKeyPairsDispatcher(async (_ctx, identifier) => {
     if (identifier !== 'me') return [] // Other than "me" is not found.
 
     const actor = await Actor.findBy('identifier', identifier)

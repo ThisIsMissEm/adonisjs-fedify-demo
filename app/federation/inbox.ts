@@ -1,7 +1,8 @@
-import { federation, kv } from '#start/federation'
+import logger from '@adonisjs/core/services/logger'
+import fedify from '@fedify/adonisjs/services/builder'
 import { Create, Follow, isActor, Note, Reject } from '@fedify/fedify'
 
-federation
+fedify
   .setInboxListeners('/actors/{identifier}/inbox', '/inbox')
   .on(Follow, async (ctx, follow) => {
     if (follow.id === null || follow.actorId === null || follow.objectId === null) {
@@ -14,7 +15,7 @@ federation
     }
 
     const follower = await follow.getActor(ctx)
-    ctx.data.logger.debug(follower)
+    logger.debug(follower)
 
     if (follower === null) return
 
@@ -27,9 +28,9 @@ federation
       new Reject({ actor: follow.objectId, object: follow })
     )
     // Store the follower in the key–value store:
-    await kv.set(['followers', follow.id.href], follow.actorId.href)
+    // await kv.set(['followers', follow.id.href], follow.actorId.href)
   })
-  .on(Create, async (ctx, create) => {
+  .on(Create, async (_ctx, create) => {
     const object = await create.getObject()
     if (!(object instanceof Note)) return
     const actor = create.actorId
@@ -39,5 +40,5 @@ federation
 
     const content = object.content?.toString()
 
-    ctx.data.logger.info({ content, author }, 'New note!')
+    logger.info({ content, author }, 'New note!')
   })

@@ -49,7 +49,8 @@
     "prettier": "^3.5.3",
     "ts-node-maintained": "^10.9.5",
     "typescript": "~5.8",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "yalc": "1.0.0-pre.53"
   },
   "dependencies": {
     "@adonisjs/auth": "^9.4.0",
@@ -60,7 +61,8 @@
     "@adonisjs/static": "^1.1.1",
     "@adonisjs/vite": "^4.0.0",
     "@deno/kv": "^0.10.0",
-    "@fedify/fedify": "^1.7.0",
+    "@fedify/adonisjs": "file:.yalc/@fedify/adonisjs",
+    "@fedify/fedify": "^1.7.2",
     "@logtape/logtape": "^1.0.0",
     "@vinejs/vine": "^3.0.1",
     "edge.js": "^6.2.1",
